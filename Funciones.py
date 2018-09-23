@@ -1,6 +1,7 @@
 import json
 import itertools
-import threading
+
+from multiprocessing.pool import ThreadPool
 from operator import itemgetter
 
 t = []
@@ -262,7 +263,6 @@ def fCalculateKeys(attributes,determinants):
     M1 =[]
     M2=[]
     resultStr = ''
-    output = ''
     
     
     L3 = calculateMinimalCoating(determinants)
@@ -317,22 +317,37 @@ def fCalculateKeys(attributes,determinants):
                 break
             prevLength = len(newM1)
 
-        #print('M1= ',M1)
-        #print('M2= ',M2)
+        resultStr = resultStr + 'M1= \n'
+        for m in M1:
+            resultStr = resultStr+",".join(m)+'\n'
+        resultStr = resultStr + 'M2= \n'
+        for m in M2:
+            resultStr = resultStr+",".join(m)+'\n'
         
-    setOutputToFile(output)
+    setOutputToFile(resultStr)
     return resultStr,M2
 
 def calculateM2(M1,L3,attributes,V):
     cM1 = []
     cM2 = []
+    async_result = []
     pos = 1
     
+    #Cantidad de hilos
+    pool = ThreadPool(len(M1)) 
+    
+    #Lanzamiento de hilos
     for m in M1:
-        newM1,newM2 = productThread(m,pos,V,attributes,L3)
+        #newM1,newM2 = productThread(m,pos,V,attributes,L3)
+        resultThread = pool.apply_async(productThread,(m,pos,V,attributes,L3))
+        async_result.append(resultThread)
+        pos = pos + 1
+    
+    #Recuperacion de resultados
+    for result in async_result:
+        newM1,newM2 = result.get()
         cM1 = cM1 + newM1
         cM2 = cM2 + newM2
-        pos = pos + 1
         
     return cM1,cM2
 
