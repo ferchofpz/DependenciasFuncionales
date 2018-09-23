@@ -1,5 +1,6 @@
 import json
 import itertools
+import threading
 from operator import itemgetter
 
 t = []
@@ -310,7 +311,7 @@ def fCalculateKeys(attributes,determinants):
         prevLength = 0
         newM1 = M1.copy()
         while True:
-            newM2,newM1 = calculateM2(newM1,L3,attributes,V)
+            newM1,newM2 = calculateM2(newM1,L3,attributes,V)
             M2 = M2 + newM2
             if prevLength == len(newM1):
                 break
@@ -323,18 +324,29 @@ def fCalculateKeys(attributes,determinants):
     return resultStr,M2
 
 def calculateM2(M1,L3,attributes,V):
-    subset_aux = []
-    M2 = []
-    newM1 =[]
+    cM1 = []
+    cM2 = []
     pos = 1
     
     for m in M1:
-        for subset in itertools.product(m[0],V[pos:len(V)]):
-            subset_aux = list(subset)
-            subset_aux = subset_aux + m[1:len(m)]
-            if getClosure(subset_aux,L3.copy()) == attributes:
-                M2.append(subset_aux)
-            else:
-                newM1.append(subset_aux)
+        newM1,newM2 = productThread(m,pos,V,attributes,L3)
+        cM1 = cM1 + newM1
+        cM2 = cM2 + newM2
         pos = pos + 1
-    return M2,newM1
+        
+    return cM1,cM2
+
+def productThread(m,pos,V,attributes,L3):
+    subset_aux = []
+    M2 = []
+    newM1 =[]
+    
+    for subset in itertools.product(m[0],V[pos:len(V)]):
+        subset_aux = list(subset)
+        subset_aux = subset_aux + m[1:len(m)]
+        if getClosure(subset_aux,L3.copy()) == attributes:
+            M2.append(subset_aux)
+        else:
+            newM1.append(subset_aux)
+    
+    return newM1,M2
