@@ -179,7 +179,7 @@ def calculateMinimalCoating(determinants):
                 temp_determinants.remove(det)
                 
         #print('L3 = ', l3, '\n')
-        outputStr = '\n'.join(str(i) for i in l3)
+        #outputStr = '\n'.join(str(i) for i in l3)
         resultStr = resultStr + '\n'.join(str(i) for i in l3)
         setOutputToFile(resultStr)
 
@@ -251,33 +251,90 @@ def splitDeterminantsWithLenGreaterThan1(determinant, dictionaryToInsert):
         dictionaryToInsert.append({"determinant": determinant['determinant'], "determinated": [det]})
 
 def fCalculateKeys(attributes,determinants):
-    L3 = []
-    determinant = []
+    #Declare
+    determinant= []
     determinated= []
-    Z = []
+    L3= []
+    Z=[]
+    W=[]
+    V=[]
+    M1 =[]
+    M2=[]
     resultStr = ''
+    output = ''
+    
+    
     L3 = calculateMinimalCoating(determinants)
     
     #Se identifican y ordenan los determinantes y determinados
     for det in L3:
-        if det['determinated'] not in determinated:
+        if det['determinated'][0] not in determinated:
             determinated.append(det['determinated'][0])
-        if det['determinant'] not in determinant:
-            determinant.append(det['determinant'][0])
+        for d in det['determinant']:
+            if d not in determinant:
+                determinant.append(d)
     
-    #Se calcula Z
+    #Se calcula Z (resta de implicados)
     for ai in sorted(attributes):
         if ai not in sorted(determinated):
             Z.append(ai)   
             
     zplus = getClosure(Z,L3.copy())
     
-    #print('L3= ',L3)
     resultStr = resultStr+'Z= '+",".join(Z)+'\n'    
     resultStr = resultStr+'Z+= '+",".join(zplus)+'\n'
     
     #Se evalua si Z+ es una llave candidata
+    if zplus == attributes:
+        resultStr = resultStr+'Z es llave única \n'
+    else:
+        #Se calcula W (resta de implicantes)
+        for ai in sorted(attributes):
+            if ai not in sorted(determinant):
+                W.append(ai)   
+        resultStr = resultStr+'W= '+",".join(W)+'\n'
+        
+        #Se calcula V=(Attr-[W U Z+])
+        for ai in sorted(attributes):
+            if ai not in W+zplus:
+                V.append(ai)   
+        resultStr = resultStr+'V= '+",".join(V)+'\n'
+        
+        #Se realiza el producto entre Z y V
+        for subset in itertools.product(Z,V):
+            M1.append(list(subset))
+            if getClosure(list(subset),L3.copy()) == attributes:
+                M2.append(list(subset))
+        
+        #Se realizan los productos subsiguientes
+        prevLength = 0
+        newM1 = M1.copy()
+        while True:
+            newM2,newM1 = calculateM2(newM1,L3,attributes,V)
+            M2 = M2 + newM2
+            if prevLength == len(newM1):
+                break
+            prevLength = len(newM1)
+
+        #print('M1= ',M1)
+        #print('M2= ',M2)
+        
+    setOutputToFile(output)
+    return resultStr,M2
+
+def calculateM2(M1,L3,attributes,V):
+    subset_aux = []
+    M2 = []
+    newM1 =[]
+    pos = 1
     
-    
-    setOutputToFile(resultStr)
-    return resultStr
+    for m in M1:
+        for subset in itertools.product(m[0],V[pos:len(V)]):
+            subset_aux = list(subset)
+            subset_aux = subset_aux + m[1:len(m)]
+            if getClosure(subset_aux,L3.copy()) == attributes:
+                M2.append(subset_aux)
+            else:
+                newM1.append(subset_aux)
+        pos = pos + 1
+    return M2,newM1

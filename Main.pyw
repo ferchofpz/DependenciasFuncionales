@@ -120,19 +120,21 @@ class Main(QMainWindow, Ui_MainWindow):
         self.ui.plainTextEditL_four.clear()
         determinants = getDeterminants(jsonInput['L'])       
         result = calculateMinimalCoating(determinants)
-        self.ui.plainTextEditL_four.appendPlainText(result)     
+        for df in result:
+            self.ui.plainTextEditL_four.appendPlainText(','.join(df['determinant'])+'->'+','.join(df['determinated'])+'\n')     
 
     def calculateKeys(self):
         jsonInput = getInputFromFile(self.ui.labelFile_five.text())
         self.ui.plainTextEditL_five.clear()
+        self.ui.plainTextEditL_keys.clear()
         
         if jsonInput is not None:
             determinants = getDeterminants(jsonInput['L'])
             attributes = getAttributes(jsonInput)
-            #result = getClosureL(attributes, determinants)
-            #strResult = ''.join([str(i) for i in result])
-            self.ui.plainTextEditL_five.appendPlainText(fCalculateKeys(attributes,determinants))
-            #setOutputToFile(strResult)
+            result,M2=fCalculateKeys(attributes,determinants)
+            self.ui.plainTextEditL_five.appendPlainText(result)
+            for m in M2:
+                self.ui.plainTextEditL_keys.appendPlainText(','.join(m)+'\n')
         
 if __name__ == "__main__":
     app = QApplication(sys.argv)
