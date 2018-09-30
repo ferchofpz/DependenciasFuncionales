@@ -1,0 +1,143 @@
+CALCULANDO RECUBRIMIENTO MINIMO
+
+1. Dependencias elementales:
+{'determinant': ['A', 'C', 'D'], 'determinated': ['B']}
+{'determinant': ['A', 'B'], 'determinated': ['C']}
+{'determinant': ['B', 'C'], 'determinated': ['D']}
+{'determinant': ['B', 'E'], 'determinated': ['C']}
+{'determinant': ['C', 'E'], 'determinated': ['A']}
+{'determinant': ['C', 'E'], 'determinated': ['G']}
+{'determinant': ['C', 'G'], 'determinated': ['B']}
+{'determinant': ['C', 'G'], 'determinated': ['D']}
+{'determinant': ['C'], 'determinated': ['A']}
+{'determinant': ['D'], 'determinated': ['E']}
+{'determinant': ['D'], 'determinated': ['G']}
+
+2. Atributos extraños:
+A - CONTAINED: FALSE
+B - CONTAINED: FALSE
+B - CONTAINED: FALSE
+A
+C - CONTAINED: FALSE
+B - CONTAINED: FALSE
+E - CONTAINED: FALSE
+A
+C - CONTAINED: TRUE
+E - CONTAINED: FALSE
+A
+C - CONTAINED: FALSE
+E - CONTAINED: FALSE
+A
+C - CONTAINED: FALSE
+G - CONTAINED: FALSE
+A
+C - CONTAINED: FALSE
+G - CONTAINED: FALSE
+
+{'determinant': ['D', 'C'], 'determinated': ['B']}
+{'determinant': ['A', 'B'], 'determinated': ['C']}
+{'determinant': ['B', 'C'], 'determinated': ['D']}
+{'determinant': ['B', 'E'], 'determinated': ['C']}
+{'determinant': ['C'], 'determinated': ['A']}
+{'determinant': ['C', 'E'], 'determinated': ['G']}
+{'determinant': ['C', 'G'], 'determinated': ['B']}
+{'determinant': ['C', 'G'], 'determinated': ['D']}
+{'determinant': ['C'], 'determinated': ['A']}
+{'determinant': ['D'], 'determinated': ['E']}
+{'determinant': ['D'], 'determinated': ['G']}
+
+3. Dependencias redundantes:
+
+
+CLOSURE = A
+B
+C
+D
+E
+G
+CONTAINED = TRUE
+
+CLOSURE = A
+B
+CONTAINED = FALSE
+
+CLOSURE = A
+B
+C
+CONTAINED = FALSE
+
+CLOSURE = B
+E
+CONTAINED = FALSE
+
+CLOSURE = A
+C
+CONTAINED = TRUE
+
+CLOSURE = A
+C
+E
+CONTAINED = FALSE
+
+CLOSURE = A
+C
+D
+E
+G
+CONTAINED = FALSE
+
+CLOSURE = A
+B
+C
+D
+E
+G
+CONTAINED = TRUE
+
+CLOSURE = C
+CONTAINED = FALSE
+
+CLOSURE = D
+G
+CONTAINED = FALSE
+
+CLOSURE = D
+E
+CONTAINED = FALSE
+
+L3=
+{'determinant': ['A', 'B'], 'determinated': ['C']}
+{'determinant': ['B', 'C'], 'determinated': ['D']}
+{'determinant': ['B', 'E'], 'determinated': ['C']}
+{'determinant': ['C', 'E'], 'determinated': ['G']}
+{'determinant': ['C', 'G'], 'determinated': ['B']}
+{'determinant': ['C'], 'determinated': ['A']}
+{'determinant': ['D'], 'determinated': ['E']}
+{'determinant': ['D'], 'determinated': ['G']}
+
+CALCULANDO LLAVES
+
+Z= F
+Z+= F
+W= F
+V= A,B,C,D,E,G
+M1= 
+F,A
+F,B
+F,C
+F,D
+F,E
+F,G
+M2= 
+F,B,A
+F,C,B
+F,D,B
+F,E,B
+F,D,C
+F,E,C
+F,G,C
+F,B,C,A
+F,D,C,A
+F,E,C,A
+F,G,C,A
+F,C,D,A

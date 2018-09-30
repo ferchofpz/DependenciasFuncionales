@@ -58,7 +58,6 @@ def getDeterminants(l):
         return determinants
 
 def calculateMinimalCoating(determinants):
-        resultStr = ''
         #print(json.dumps(determinants, indent=4, sort_keys=True))
         converted_determinants = []
         for det in determinants:
@@ -71,8 +70,10 @@ def calculateMinimalCoating(determinants):
         #print(converted_determinants)
         converted_determinants = sorted(converted_determinants, key=lambda item : len(item['determinant']), reverse=True)
         #print('\n DETERMINANTS STEP 1: \n ', converted_determinants, '\n')
-        resultStr = resultStr + '\n'
-        resultStr = resultStr + '\n'.join(str(i) for i in converted_determinants) 
+        
+        resultStr = 'CALCULANDO RECUBRIMIENTO MINIMO'+'\n\n'+'1. Dependencias elementales:\n'
+        resultStr = resultStr +  '\n'.join(str(i) for i in converted_determinants) 
+        resultStr = resultStr + '\n\n2. Atributos extraños:\n'
 
         l2 = []
         attributesCombinations = []
@@ -81,8 +82,8 @@ def calculateMinimalCoating(determinants):
         for det in converted_determinants:
             #print(len(det['determinant']))
             #print(det)
-            resultStr = resultStr + str(len(det['determinant']))
-            resultStr = resultStr + '\n'.join(str(i) for i in det)
+            #resultStr = resultStr + str(len(det['determinant']))
+            #resultStr = resultStr + '\n'.join(str(i) for i in det)
 
             if len(det['determinant']) == 1 :
                 l2.append(det)
@@ -105,9 +106,9 @@ def calculateMinimalCoating(determinants):
                     #print('CLOSURE ',j,'+: ',closure, ' - CONTAINED: ', contained)
                     resultStr = resultStr + '\n'.join(str(i) for i in closure)
                     if(contained):
-                        resultStr = resultStr +  ' - CONTAINED: TRUE'
+                        resultStr = resultStr +  ' - CONTAINED: TRUE\n'
                     else:
-                        resultStr = resultStr +  ' - CONTAINED: FALSE'
+                        resultStr = resultStr +  ' - CONTAINED: FALSE\n'
                    
                     contained_determinants.append({"determinant": j, "contained": contained })
 		
@@ -129,8 +130,8 @@ def calculateMinimalCoating(determinants):
                         if len(subset) > 0 and len(subset) < len(det['determinant']):
                             attributesCombinations.append(list(subset))
                 #print('\n', attributesCombinations, '\n')
-                resultStr = resultStr + '\n'
-                resultStr = resultStr + ''.join(str(i) for i in attributesCombinations) 
+                #resultStr = resultStr + '\n'
+                #resultStr = resultStr + ''.join(str(i) for i in attributesCombinations) 
 
                 result = []
                 
@@ -142,32 +143,31 @@ def calculateMinimalCoating(determinants):
                         result = list(set(det['determinant']) - (set(det['determinant']) - set(attr)))
                         break
                     #print(list(set(det['determinant']) - set(attr))) 
-                    resultStr = resultStr + '\n'+list(set(det['determinant']) - set(attr))
+                    #resultStr = resultStr + '\n'+list(set(det['determinant']) - set(attr))
                 #print(result)
-                resultStr = resultStr + ''.join(str(i) for i in attributesCombinations) 
+                #resultStr = resultStr + ''.join(str(i) for i in attributesCombinations) 
                 l2.append({ "determinant": result, "determinated": det['determinated'] })  
             else:
                 l2.append(det);
                         
         #print('\n', 'L2 = \n ', l2, '\n')         
-        resultStr = resultStr + '\n'
-        resultStr = resultStr + '\n'.join(str(i) for i in l2)
+        resultStr = resultStr + '\n' +'\n'.join(str(i) for i in l2)
 
         l3 = []
-        
+        resultStr = resultStr + '\n\n3. Dependencias redundantes:\n'
         temp_determinants = l2.copy()
         
         #Find redundants functional Dedendencies
         for det in l2:
             #print(det)
-            resultStr = resultStr + ''.join(str(i) for i in det)
+            #resultStr = resultStr + ''.join(str(i) for i in det)
             temp_determinants.remove(det)
             closure = getClosure(det['determinant'], temp_determinants.copy())
             temp_determinants.append(det)
             contained = (containsIn(det['determinated'], closure) or containsIn(closure, det['determinated']) )
             #print('CLOSURE = ', closure)
             #print('CONTAINED= ', contained)
-            resultStr = resultStr + '\nCLOSURE = '
+            resultStr = resultStr + '\n\nCLOSURE = '
             resultStr = resultStr + '\n'.join(str(i) for i in closure)
             if(contained):
                 resultStr = resultStr + '\nCONTAINED = TRUE'
@@ -182,15 +182,20 @@ def calculateMinimalCoating(determinants):
                 
         #print('L3 = ', l3, '\n')
         #outputStr = '\n'.join(str(i) for i in l3)
-        resultStr = resultStr + '\n'.join(str(i) for i in l3)
-        setOutputToFile(resultStr)
+        resultStr = resultStr + '\n\nL3=\n'+'\n'.join(str(i) for i in l3)
+        setOutputToFile(resultStr,'A')
 
-        #return outputStr
         return l3
 
-def setOutputToFile(datos):
-    with open('output.json', 'w') as file:
-        json.dump(datos, file)
+def setOutputToFile(datos,mode):
+    #with open('output.json', 'w') as file:
+    #    json.dump(datos, file)
+    if mode == 'A':
+        file = open('output.out', 'a')
+    else:
+        file = open('output.out', 'w')
+        
+    file.write(datos)
         
 def containsIn(valueToVerify, setToVerify):
     for value in valueToVerify:
@@ -199,10 +204,12 @@ def containsIn(valueToVerify, setToVerify):
     return True
 
 def belongsFD(fD, closure):
+    determinated = fD.split('->')[1].split(',')
     
-   determinated = fD.split('->')[1].split(',')
-        
-   return containsIn(determinated, closure)
+    resultStr = 'Se evalua si '+determinated+' pertenece a L+...'+'\n'
+    setOutputToFile(resultStr,'A')
+    
+    return containsIn(determinated, closure)
 
 def getClosure(ct, determinants_temp):
     result = ct
@@ -230,15 +237,18 @@ def getClosureL(attributes, determinants):
     
     attributesCombinations = []
     result_l = []
-            
+    strResult = "CALCULANDO CIERRE"+"\n\n"
+    strResult = strResult + "Se obtienen las siguientes combinaciones "+"\n"
     for L in range(0, len(attributes)+1):
                 for subset in itertools.combinations(attributes, L):
                     if len(subset) > 0:
+                        strResult = strResult + ','.join(list(subset)) +"\n"
                         attributesCombinations.append(list(subset))
-    #print('Generando L+...')
+    strResult = strResult + "\nGenerando L+..." +"\n"
     for ct in attributesCombinations:
         result_l.append({",".join(ct): getClosure(ct, determinants.copy())})
         
+    setOutputToFile(strResult,'A')
     return result_l
 
 def searchBy(key, listWhichSearch, valueToSearch):
@@ -262,8 +272,7 @@ def fCalculateKeys(attributes,determinants):
     V=[]
     M1 =[]
     M2=[]
-    resultStr = ''
-    
+    resultStr = '\n\nCALCULANDO LLAVES\n\n'
     
     L3 = calculateMinimalCoating(determinants)
     
@@ -324,7 +333,7 @@ def fCalculateKeys(attributes,determinants):
         for m in M2:
             resultStr = resultStr+",".join(m)+'\n'
         
-    setOutputToFile(resultStr)
+    setOutputToFile(resultStr,'A')
     return resultStr,M2
 
 def calculateM2(M1,L3,attributes,V):
