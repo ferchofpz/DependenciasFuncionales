@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'menu.ui'
 #
-# Created by: PyQt5 UI code generator 5.11.2
+# Created by: PyQt5 UI code generator 5.9.2
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -82,18 +82,6 @@ class Ui_MainWindow(object):
         self.buttonSave_one = QtWidgets.QPushButton(self.subwindow_one)
         self.buttonSave_one.setGeometry(QtCore.QRect(140, 340, 75, 23))
         self.buttonSave_one.setObjectName("buttonSave_one")
-        self.labelTittle_one.raise_()
-        self.buttonUploadFile_one.raise_()
-        self.labelFile_one.raise_()
-        self.buttonClousureCalculate_one.raise_()
-        self.scrollArea.raise_()
-        self.labelBelong_one.raise_()
-        self.label_11.raise_()
-        self.label_12.raise_()
-        self.labelSubTitle_two_6.raise_()
-        self.viewT1.raise_()
-        self.viewL1.raise_()
-        self.buttonSave_one.raise_()
         self.subwindow_two = QtWidgets.QWidget()
         self.subwindow_two.setObjectName("subwindow_two")
         self.labelTittle_two = QtWidgets.QLabel(self.subwindow_two)
@@ -151,7 +139,7 @@ class Ui_MainWindow(object):
         self.label_6.setGeometry(QtCore.QRect(150, 320, 81, 16))
         self.label_6.setObjectName("label_6")
         self.labelResult = QtWidgets.QLabel(self.subwindow_three)
-        self.labelResult.setGeometry(QtCore.QRect(580, 330, 141, 21))
+        self.labelResult.setGeometry(QtCore.QRect(500, 330, 251, 21))
         self.labelResult.setObjectName("labelResult")
         self.label_8 = QtWidgets.QLabel(self.subwindow_three)
         self.label_8.setGeometry(QtCore.QRect(350, 320, 81, 16))
@@ -169,7 +157,7 @@ class Ui_MainWindow(object):
         self.labelFile_three.setGeometry(QtCore.QRect(140, 50, 591, 16))
         self.labelFile_three.setObjectName("labelFile_three")
         self.labelSubTitle_two_7 = QtWidgets.QLabel(self.subwindow_three)
-        self.labelSubTitle_two_7.setGeometry(QtCore.QRect(170, 100, 221, 16))
+        self.labelSubTitle_two_7.setGeometry(QtCore.QRect(170, 100, 401, 16))
         self.labelSubTitle_two_7.setObjectName("labelSubTitle_two_7")
         self.label_13 = QtWidgets.QLabel(self.subwindow_three)
         self.label_13.setGeometry(QtCore.QRect(180, 130, 21, 16))
@@ -315,7 +303,7 @@ class Ui_MainWindow(object):
         self.labelMenu_5.setObjectName("labelMenu_5")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 871, 21))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 871, 22))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
@@ -398,4 +386,14 @@ class Ui_MainWindow(object):
         self.labelMenu_3.setText(_translate("MainWindow", "Jose Rojas"))
         self.labelMenu_4.setText(_translate("MainWindow", "Edwin Monroy"))
         self.labelMenu_5.setText(_translate("MainWindow", "Fernando Perez"))
+
+
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    MainWindow = QtWidgets.QMainWindow()
+    ui = Ui_MainWindow()
+    ui.setupUi(MainWindow)
+    MainWindow.show()
+    sys.exit(app.exec_())
 

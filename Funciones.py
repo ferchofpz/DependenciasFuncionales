@@ -203,13 +203,9 @@ def containsIn(valueToVerify, setToVerify):
             return False    
     return True
 
-def belongsFD(fD, closure):
-    determinated = fD.split('->')[1].split(',')
-    
-    resultStr = 'Se evalua si '+determinated+' pertenece a L+...'+'\n'
-    setOutputToFile(resultStr,'A')
-    
-    return containsIn(determinated, closure)
+def belongsFD(determined, closure):
+   determinedList = determined.split(',')            
+   return containsIn(determinedList, closure)
 
 def getClosure(ct, determinants_temp):
     result = ct
